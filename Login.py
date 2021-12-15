@@ -1,5 +1,5 @@
 import hashlib ,uuid
-import File_handler
+from File_handler_module import File_Handler
 from Log_handler import Log_handler
 from datetime import datetime
 
@@ -17,8 +17,8 @@ class Login:
         #open file/chck if username is in that file, return dic['hashed_password']
         hashed_password = ''
         event_type = 'login_failed'
-        path = str("{username}.log")
-        fl = File_handler(path)
+        path = str(f"username_password.csv")
+        fl = File_Handler(path)
         user_pass_list = fl.read()
         if self.username in user_pass_list:
             hashed_password = hashlib.sha512((self.password + Login.salt).encode()).hexdigest()

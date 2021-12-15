@@ -4,6 +4,7 @@ class File_Handler:
     def __init__(self, path):
         self.path = path
     def read(self):
+        list_content=[]
         try:
             with open(self.path, 'r') as csv_file:
                 csv_reader = csv.DictReader(csv_file, delimiter=',')
