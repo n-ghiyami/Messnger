@@ -2,7 +2,7 @@ import hashlib
 from File_handler_module import File_Handler
 from Log_handler import Log_handler
 from datetime import datetime
-
+from Message_directory_module import Homepage
 class Login:
     """
            attribute:
@@ -38,14 +38,13 @@ class Login:
 
     def check_password(self):
         event_type = 'login_failed'
-        password = self.username_validation()
-        if password != '':
+        stored_password = self.username_validation()
+        if stored_password != '':
             salt_file = File_Handler("salt.csv")
             salt_dic = salt_file.read()
             salt = salt_dic[0]['salt']
             hashed_password = hashlib.sha512((self.password + salt).encode()).hexdigest()
-
-            if hashed_password == hashed_password:
+            if hashed_password == stored_password:
                 self.token = 'valid'
                 event_type = 'login_successfull'
         self.log = Log_handler.log_handler(self.username, datetime.now(), event_type)
@@ -56,4 +55,8 @@ class Login:
         self.token = self.check_password()
         if self.token == 'valid':
             path = f"{self.username}"
-        return path
+            homepage = Homepage(path)
+            homepage.load_homepage()
+        else:
+            print("Incorrect username or password!")
+        return
