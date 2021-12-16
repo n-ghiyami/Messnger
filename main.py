@@ -12,7 +12,8 @@ if user_input =='1':
 elif user_input == '2':
     username = input("Enter username: ")
     password = input("Enter password: ")
-    path = Login(username, password)
+    login_obj = Login(username, password)
+    path= login_obj.login_method()
     if path != '':
         directory_contents = os.listdir(path)
         print(directory_contents)

@@ -26,26 +26,28 @@ class Login:
 
         #open file/chck if username is in that file, return dic['hashed_password']
         hashed_password = ''
-
-        path = str(f"username_password.csv")
+        password = ''
+        path = f"username_password.csv"
         fl = File_Handler(path)
         user_pass_list = fl.read()
         for item in user_pass_list:
             if self.username == item['username']:
-                salt_file = File_Handler("salt.csv")
-                salt_dic = salt_file.read()
-                salt = salt_dic[0]['salt']
-                hashed_password = hashlib.sha512((self.password + salt).encode()).hexdigest()
+                password = item['password']
                 break
-        return hashed_password
+        return password
 
     def check_password(self):
         event_type = 'login_failed'
-        hashed_password = self.username_validation()
-        print(hashed_password)
-        if hashed_password!=''and hashed_password == self.hashed_password:
-            self.token = 'valid'
-            event_type = 'login_successfull'
+        password = self.username_validation()
+        if password != '':
+            salt_file = File_Handler("salt.csv")
+            salt_dic = salt_file.read()
+            salt = salt_dic[0]['salt']
+            hashed_password = hashlib.sha512((self.password + salt).encode()).hexdigest()
+
+            if hashed_password == hashed_password:
+                self.token = 'valid'
+                event_type = 'login_successfull'
         self.log = Log_handler.log_handler(self.username, datetime.now(), event_type)
         return self.token
 
