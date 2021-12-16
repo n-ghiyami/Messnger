@@ -23,7 +23,6 @@ class File_Handler:
                 if len(open(self.path).readlines())== 0:
                     writer.writeheader()
                 writer.writerow(kwargs)
-                print("test2")
         except Exception as ex:
             print(ex.with_traceback())
 
