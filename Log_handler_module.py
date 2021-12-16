@@ -18,10 +18,10 @@ class Log_handler:
         for elem in user_pass_list:
             if username == elem['username']:
                 a = cls(username, time,event_type)
-                log_path = "{0}.log".format(username)
+
         else:
             a = Log_handler(cls.system_log, time, event_type)
-            log_path = f"{cls.system_log}.log"
+
         # logging.log(time=time,path=log_path,event_type=event_type,level=logging.INFO,msg="")
 
 log_path = "system_log.log"

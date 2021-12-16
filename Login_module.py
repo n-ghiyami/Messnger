@@ -1,6 +1,6 @@
 import hashlib
 from File_handler_module import File_Handler
-from Log_handler import Log_handler
+from Log_handler_module import Log_handler
 from datetime import datetime
 from Message_directory_module import Homepage
 class Login:
@@ -52,11 +52,11 @@ class Login:
 
     def login_method(self):
         path = ''
-        self.token = self.check_password()
+        self.check_password()
         if self.token == 'valid':
             path = f"{self.username}"
             homepage = Homepage(path)
             homepage.load_homepage()
         else:
             print("Incorrect username or password!")
-        return
+        return self.token

@@ -4,7 +4,7 @@ import re
 
 
 from File_handler_module import File_Handler
-from Log_handler import Log_handler
+from Log_handler_module import Log_handler
 from datetime import datetime
 
 class Sign_up:
