@@ -32,7 +32,10 @@ class Login:
         user_pass_list = fl.read()
         for item in user_pass_list:
             if self.username == item['username']:
-                password = item['password']
+                if item['failed_login_count'] == 3:
+                    print('Your account is locked! ')
+                else:
+                    password = item['password']
                 break
         return password
 
@@ -52,13 +55,16 @@ class Login:
 
     def login_method(self):
         l = Log_handler()
+        failed_login_count=0
         self.check_password()
+        message = 'login_failed'
         if self.token == 'valid':
-            l.log(datetime.utcnow,'login_successfull', 'INFO')
             path = f"{self.username}"
             homepage = Homepage(path)
             homepage.load_homepage()
+            message = 'login_successful'
         else:
             print("Incorrect username or password!")
-            l.log(datetime.utcnow,'login_failed','INFO')
+            failed_login_count += 1
+        l.log(datetime.utcnow,'login_failed','INFO')
         return self.token

@@ -14,12 +14,14 @@ class Sign_up:
         methods :
         username_validation
         check_password
-        check_sign_up: call check password and user validation cascadingly and make directory if all things are valid
+        check_sign_up: call check password and user validation
+        cascading and make directory if all things are valid
     """
 
     def __init__(self , username , password):
         self.username = username
         self.password = password
+        self.log_obj = Log_handler()
 
 
 
@@ -42,25 +44,31 @@ class Sign_up:
 
     def check_password(self):
         hashed_password = ''
-        event_type = 'sign_up_failed'
+        message = 'sign_up_failed'
         if self.username_validation():
             salt_file = File_Handler("salt.csv")
             salt_dic = salt_file.read()
             salt = salt_dic[0]['salt']
-            if self.password!='' and re.fullmatch('^[A-Za-z0-9_@+|$&*;]{7,29}$',self.password):
-                hashed_password =  hashlib.sha512((self.password + salt).encode()).hexdigest()
-                event_type = 'sign_up_successful'
-
-        return hashed_password , event_type
+            if self.password!='' and re.fullmatch('^[A-Za-z0-9_@+|$&*;]{7,29}$'
+                    ,self.password):
+                hashed_password =  hashlib.sha512((self.password + salt).encode()).\
+                    hexdigest()
+                message = 'sign_up_successful'
+        dic_result = {'hashed_password':hashed_password ,'message':message}
+        return dic_result
 
     def check_sign_up(self):
-        hashed_password , event_type =self.check_password()
-        if event_type == 'sign_up_successful':
+        dic_result = self.check_password()
+        message = dic_result['message']
+        hashed_password = dic_result['hashed_password']
+        if message == 'sign_up_successful':
             path = "username_password.csv"
             fl = File_Handler(path)
-            fl.write({'username':self.username,'password':hashed_password})
+            fl.write({'username':self.username,'password':hashed_password , 'failed_login_count':0})
             os.mkdir(f'{self.username}')
             os.mkdir(f'{self.username}/Intbox')
             os.mkdir(f'{self.username}/Sentbox')
             os.mkdir(f'{self.username}/Draft')
-        self.log = Log_handler.log_handler(self.username, datetime.now(), event_type)
+            index_file = File_Handler(f'{self.username}/index_file.csv')
+            index_file.write()
+        self.log_obj.log(datetime.utcnow(),message,'INFO')
