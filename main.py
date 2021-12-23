@@ -10,6 +10,7 @@ while True:
         username = input("Enter username: ")
         password = input("Enter password: ")
         s = Sign_up(username, password)
+        s.check_sign_up()
     elif user_input == '2':
         username = input("Enter username: ")
         password = input("Enter password: ")

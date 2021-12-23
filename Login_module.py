@@ -3,6 +3,8 @@ from File_handler_module import File_Handler
 from Log_handler_module import Log_handler
 from datetime import datetime
 from Message_directory_module import Homepage
+import pandas as pd
+
 class Login:
     """
            attribute:
@@ -32,7 +34,7 @@ class Login:
         user_pass_list = fl.read()
         for item in user_pass_list:
             if self.username == item['username']:
-                if item['failed_login_count'] == 3:
+                if item['failed_login_count'] >= 3:
                     print('Your account is locked! ')
                 else:
                     password = item['password']
@@ -54,8 +56,7 @@ class Login:
         return self.token
 
     def login_method(self):
-        l = Log_handler()
-        failed_login_count=0
+        my_log = Log_handler()
         self.check_password()
         message = 'login_failed'
         if self.token == 'valid':
@@ -65,6 +66,13 @@ class Login:
             message = 'login_successful'
         else:
             print("Incorrect username or password!")
-            failed_login_count += 1
-        l.log(datetime.utcnow,'login_failed','INFO')
+            df = pd.read_csv('username_password.csv')
+            if len(df)>0:
+                for x in df.index:
+                    if df.loc[x,"username"] == self.username:
+                        df.loc[x, "login_failed_count"] +=1
+                        break
+                        if df.loc[x, "login_failed_count"] ==3:
+                            my_log.log(datetime.utcnow(),f'{self.username} account_locked','INFO')
+        my_log.log(datetime.utcnow,message,'INFO')
         return self.token
