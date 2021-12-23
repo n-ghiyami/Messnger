@@ -1,8 +1,6 @@
 import hashlib
 import os
 import re
-
-
 from File_handler_module import File_Handler
 from Log_handler_module import Log_handler
 from datetime import datetime
@@ -49,10 +47,10 @@ class Sign_up:
             salt_file = File_Handler("salt.csv")
             salt_dic = salt_file.read()
             salt = salt_dic[0]['salt']
-            if self.password!='':
+            if self.password!='' and re.fullmatch('^[A-Za-z0-9_@+|$&*;]{7,29}$',self.password):
                 hashed_password =  hashlib.sha512((self.password + salt).encode()).hexdigest()
                 event_type = 'sign_up_successful'
-                print(hashed_password)
+
         return hashed_password , event_type
 
     def check_sign_up(self):

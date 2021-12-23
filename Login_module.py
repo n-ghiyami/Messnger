@@ -13,7 +13,7 @@ class Login:
             methods :
             username_validation
             check_password
-            check_sign_up: call check password and user validation cascadingly and make directory if all things are valid
+            check_sign_in: call check password and user validation cascadingly and make directory if all things are valid
         """
 
     def __init__(self , username , password):

@@ -4,26 +4,31 @@ from File_handler_module import File_Handler
 
 class Log_handler:
 
-    system_log = 'system_log.log'
-    def __init__(self,username, time,event_type):
-        self.time =time
-        self.event_type = event_type
+    log_file = 'log_file.log'
+    def __init__(self):
+        self.logger = None
+        self.f_handler = None
 
-    @classmethod
-    def log_handler(cls,username, time,event_type):
-        path = "username_password.csv"
-        fl = File_Handler(path)
-        user_pass_list = fl.read()
-        log_path = ''
-        for elem in user_pass_list:
-            if username == elem['username']:
-                a = cls(username, time,event_type)
 
-        else:
-            a = Log_handler(cls.system_log, time, event_type)
+    def log(self,time,message,event_type):
+        logger = logging.getLogger(__name__)
+        f_handler = logging.FileHandler('log_file.log')
+        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        f_handler.setFormatter(formatter)
+        logger.addHandler(f_handler)
+        logger.level = logging.NOTSET
+        logger.setLevel(logging.INFO)
+        if event_type == 'INFO':
+            logger.info(message)
+        elif event_type =="ERROR" or event_type == 'EXCEPTION':
+            logger.error(message)
 
-        # logging.log(time=time,path=log_path,event_type=event_type,level=logging.INFO,msg="")
 
 log_path = "system_log.log"
 event_type="login_failed"
 time = datetime.datetime.now()
+
+l = Log_handler()
+l.log(time,'Login failed','INFO')
+
+
