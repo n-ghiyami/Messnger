@@ -37,7 +37,7 @@ class Login:
         return password
 
     def check_password(self):
-        event_type = 'login_failed'
+        # message = 'login_failed'
         stored_password = self.username_validation()
         if stored_password != '':
             salt_file = File_Handler("salt.csv")
@@ -46,17 +46,19 @@ class Login:
             hashed_password = hashlib.sha512((self.password + salt).encode()).hexdigest()
             if hashed_password == stored_password:
                 self.token = 'valid'
-                event_type = 'login_successfull'
-        self.log = Log_handler.log_handler(self.username, datetime.now(), event_type)
+                # message = 'login_successfull'
+        # self.log = Log_handler.log_handler(self.username, datetime.now(), event_type)
         return self.token
 
     def login_method(self):
-        path = ''
+        l = Log_handler()
         self.check_password()
         if self.token == 'valid':
+            l.log(datetime.utcnow,'login_successfull', 'INFO')
             path = f"{self.username}"
             homepage = Homepage(path)
             homepage.load_homepage()
         else:
             print("Incorrect username or password!")
+            l.log(datetime.utcnow,'login_failed','INFO')
         return self.token
