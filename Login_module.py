@@ -34,7 +34,7 @@ class Login:
         user_pass_list = fl.read()
         for item in user_pass_list:
             if self.username == item['username']:
-                if item['failed_login_count'] >= 3:
+                if int(item['failed_login_count']) >= 3:
                     print('Your account is locked! ')
                 else:
                     password = item['password']
@@ -70,9 +70,10 @@ class Login:
             if len(df)>0:
                 for x in df.index:
                     if df.loc[x,"username"] == self.username:
-                        df.loc[x, "login_failed_count"] +=1
+                        df.loc[x, "failed_login_count"] +=1
                         break
-                        if df.loc[x, "login_failed_count"] ==3:
+                        if df.loc[x, "failed_login_count"] ==3:
                             my_log.log(datetime.utcnow(),f'{self.username} account_locked','INFO')
+
         my_log.log(datetime.utcnow,message,'INFO')
         return self.token

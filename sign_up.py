@@ -65,11 +65,11 @@ class Sign_up:
             path = "username_password.csv"
             fl = File_Handler(path)
             fl.write({'username':self.username,'password':hashed_password , 'failed_login_count':0})
-            os.mkdir(f'{self.username}')
-            os.mkdir(f'{self.username}/Intbox')
-            os.mkdir(f'{self.username}/Sentbox')
-            os.mkdir(f'{self.username}/Draft')
-            path = (f'{self.username}/index_file.csv')
+            os.mkdir(f'users/{self.username}')
+            os.mkdir(f'users/{self.username}/Intbox')
+            os.mkdir(f'users/{self.username}/Sentbox')
+            os.mkdir(f'users/{self.username}/Draft')
+            path = (f'users/{self.username}/index_file.csv')
             with open(path,'w')as csvfile:
                 pass
         self.log_obj.log(datetime.utcnow(),message,'INFO')
