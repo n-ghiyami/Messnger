@@ -42,7 +42,6 @@ class Login:
         return password
 
     def check_password(self):
-        # message = 'login_failed'
         stored_password = self.username_validation()
         if stored_password != '':
             salt_file = File_Handler("salt.csv")
@@ -51,8 +50,6 @@ class Login:
             hashed_password = hashlib.sha512((self.password + salt).encode()).hexdigest()
             if hashed_password == stored_password:
                 self.token = 'valid'
-                # message = 'login_successfull'
-        # self.log = Log_handler.log_handler(self.username, datetime.now(), event_type)
         return self.token
 
     def login_method(self):
@@ -70,10 +67,13 @@ class Login:
             if len(df)>0:
                 for x in df.index:
                     if df.loc[x,"username"] == self.username:
-                        df.loc[x, "failed_login_count"] +=1
-                        break
-                        if df.loc[x, "failed_login_count"] ==3:
+                        df.loc[x, "failed_login_count"] = int(df.loc[x, "failed_login_count"]) + 1
+                        df.to_csv('username_password.csv')
+                        if df.loc[x, "failed_login_count"] == 3:
                             my_log.log(datetime.utcnow(),f'{self.username} account_locked','INFO')
+                            print('Your account has been locked')
+                        break
+
 
         my_log.log(datetime.utcnow,message,'INFO')
         return self.token
