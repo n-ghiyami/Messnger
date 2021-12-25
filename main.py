@@ -16,7 +16,9 @@ while True:
         login_obj = Login(username, password)
         login_obj.login_method()
         if login_obj.token == 'valid':
-            break
+            print("your logged in")
+    elif user_input == 3:
+        print("your logged out")
     else:
         print("invalid input")
 

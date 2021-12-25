@@ -69,8 +69,14 @@ class Sign_up:
             os.mkdir(f'users/{self.username}/Intbox')
             os.mkdir(f'users/{self.username}/Sentbox')
             os.mkdir(f'users/{self.username}/Draft')
-            path = (f'users/{self.username}/index_file.csv')
+            path = (f'users/{self.username}/Intbox/index_file.csv')
             with open(path,'w')as csvfile:
+                pass
+            path = (f'users/{self.username}/Sentbox/index_file.csv')
+            with open(path, 'w') as csvfile:
+                pass
+            path = (f'users/{self.username}/Draft/index_file.csv')
+            with open(path, 'w') as csvfile:
                 pass
         self.log_obj.log(datetime.utcnow(),message,'INFO')
         print(message)
