@@ -9,8 +9,8 @@ class Log_handler:
         self.logger = None
         self.f_handler = None
 
-
-    def log(self,time,message,event_type):
+    @staticmethod
+    def log(time,message,event_type):
         logger = logging.getLogger(__name__)
         f_handler = logging.FileHandler('log_file.log')
         formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')

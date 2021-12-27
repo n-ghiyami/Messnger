@@ -6,7 +6,7 @@ import Message_directory_module
 from File_handler_module import File_Handler
 
 while True:
-    user_input = input("Enter 1 to sign up and 2 to login ")
+    user_input = input("Enter 1 to sign up and 2 to login or any other key to exit : ")
     if user_input == '1':
         username = input("Enter username: ")
         password = input("Enter password: ")
@@ -72,8 +72,5 @@ while True:
                     break
                 else:
                     print("invalid input")
-
-"""
-create new message
-switch to inbox/ sentbox /draft
-"""
+    else:
+        break
