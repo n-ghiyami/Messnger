@@ -56,7 +56,7 @@ while True:
                     receiver_address = input("Enter receiver address: ")
                     title = input("Enter title of message: ")
                     text = input("Enter text of message: ")
-                    time =  f"{datetime.datetime.utcnow().strftime( '%Y-%B-%d_%H-%M-%S')}"
+                    time =  f"{datetime.datetime.utcnow().strftime( '%Y-%m-%d_%H-%M-%S')}"
                     new_message = messenger_obj.create_new_message(input_text=text,
                                                                    receiver_address=receiver_address,
                                                                    sender_address=username,
