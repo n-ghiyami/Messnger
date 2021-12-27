@@ -2,7 +2,7 @@ import os
 from File_handler_module import File_Handler
 import pandas as pd
 
-class Homepage:
+class Messenger:
     """
     attribute:
     path : path of directory
@@ -23,6 +23,7 @@ class Homepage:
         this method loads homepage including inbox, sentbox and draft
         """
         if self.path != '':
+            self.path = f"{os.getcwd()}/users/{self.path}"
             directory_contents = os.listdir(self.path)
             return (directory_contents)
 
@@ -30,50 +31,44 @@ class Homepage:
         """
         This method loads all messages list from any given directory including inbox, sentbox or draft
         """
-        all_messages = pd.read_csv(f"{os.getcwd()}/{directory_name}/index_file")
-        print(f"total messages:{all_messages.index}\n",
-              (f"{x+1} sender: {all_messages.loc[x,'sender']} "
-              f"receiver {all_messages.loc[x,'receiver']} "
-              f"unique_id: {all_messages.loc[x, 'unique_id']} "
-              f"read status: {all_messages.loc[x, 'read_status']}" if directory_name == 'Inbox' else ''
-              for x in all_messages.index))
+        all_messages = pd.read_csv(f"{self.path}/{directory_name}/index_file.csv")
+        return f"total messages:{len(all_messages)}\n"+str(all_messages)
 
-    def create_new_message(self , input_text , receiver_address,sender_address):
+    def create_new_message(self , input_text , receiver_address,sender_address, title, time):
         """
         this method creates a new message
         """
-        new_message = Message.add_message(input_text,receiver_address,sender_address)
+        new_message = Message.add_message(input_text,receiver_address,sender_address,title,time)
         return new_message
 
     def save_in_draft(self,temp_message):
         print("this method saves a specific message in draft")
         if self.path != '':
-            path = f"{os.getcwd()}/Draft"
+            path = f"{self.path}/Draft"
             fl = File_Handler(f"{path}/{temp_message.title}_{temp_message.time}.csv")
-            fl.write(dict(temp_message))
+            fl.write(temp_message.__dict__())
             fl = File_Handler(f"{path}/index_file.csv")
             unique_id = f"{temp_message.title}_{temp_message.time}"
-            content = fl.read()
             new_record = {'sender':temp_message.sender_address,'receiver':temp_message.receiver_address,
                           'unique_id':unique_id }
-            content.append(new_record)
-            fl.write(content)
+            fl.write(new_record)
 
-    def show_message(self, path, message_number):
+    def show_message(self, directory_name, message_number):
         """
         this method shows a specific message
         :param message_number:
         :return:
         """
-        df = pd.read_csv(f"{path}/index_file")
-        message_path = f"{path}/{df.loc[message_number-1 , 'unique_id']}.csv"
+        path = f"{self.path}/{directory_name}"
+        df = pd.read_csv(f"{path}/index_file.csv")
+        message_path = f"{path}/{df.loc[message_number , 'unique_id']}.csv"
         message_df = pd.read_csv(message_path)
         message = Message.add_message(message_df.loc[0,'text'],
-            message_df.loc[0,'receiver'],message_df.loc[0,'sender_address'],
+            message_df.loc[0,'receiver_address'],message_df.loc[0,'sender_address'],
             message_df.loc[0,'title'],message_df.loc[0,'time'])
-        if path.endswith('Inbox'):
+        if directory_name=='Inbox':
             df.loc[message_number-1 , 'read_status'] = 'read'
-        df.to_csv(f"{path}/index_file")
+            df.to_csv(f"{path}/index_file.csv")
         return str(message)
 
     def delete_message(self,path, message_number):
@@ -158,8 +153,9 @@ class Message:
                f" title: {self.title}, time: {self.time} \n{self.text}"
 
     def __dict__(self):
-        return {'sender': f'{self.sender_address}' , 'receiver': f'{self.receiver_address}',\
-               'title': f'{self.title}', 'time': f'{self.time}', 'text': f'{self.text}'}
+        return {'sender_address': f'{self.sender_address}' ,
+                'receiver_address': f'{self.receiver_address}','title': f'{self.title}',
+                'time': f'{self.time}', 'text': f'{self.text}'}
 
 class Recieved_message(Message):
     def __init__(self):

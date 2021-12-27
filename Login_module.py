@@ -2,7 +2,7 @@ import hashlib
 from File_handler_module import File_Handler
 from Log_handler_module import Log_handler
 from datetime import datetime
-from Message_directory_module import Homepage
+from Message_directory_module import Messenger
 import pandas as pd
 
 class Login:
@@ -58,7 +58,7 @@ class Login:
         message = 'login_failed'
         if self.token == 'valid':
             path = f"{self.username}"
-            homepage = Homepage(path)
+            homepage = Messenger(path)
             homepage.load_homepage()
             message = 'login_successful'
         else:
