@@ -44,8 +44,19 @@ class Login:
     def check_password(self):
         stored_password = self.username_validation()
         if stored_password != '':
-            salt_file = File_Handler("salt.csv")
-            salt_dic = salt_file.read()
+            try:
+                salt_file = File_Handler("salt.csv")
+            except FileNotFoundError:
+                # salt does not exist
+                print("Can not register because of lack of internal data error!")
+                Log_handler.log('File_NotFoundException','EXCEPTION')
+                return
+            try:
+                salt_dic = salt_file.read()
+            except Exception as ex:
+                print(f"{ex.__str__()}")
+                Log_handler.log('File_NotFoundException','EXCEPTION')
+                return
             salt = salt_dic[0]['salt']
             hashed_password = hashlib.sha512((self.password + salt).encode()).hexdigest()
             if hashed_password == stored_password:
@@ -53,14 +64,17 @@ class Login:
         return self.token
 
     def login_method(self):
-        my_log = Log_handler()
         self.check_password()
         message = 'login_failed'
         if self.token == 'valid':
             path = f"{self.username}"
-            homepage = Messenger(path)
-            homepage.load_homepage()
             message = 'login_successful'
+            df = pd.read_csv(f"username_password.csv")
+            for x in df.index:
+                if df.loc[x,'username'] == self.username:
+                    df.loc[x , 'failed_login_count'] = 0
+                    df.to_csv("username_password.csv",index=None,index_label=None)
+                    break
         else:
             print("Incorrect username or password!")
             df = pd.read_csv('username_password.csv')
@@ -70,10 +84,8 @@ class Login:
                         df.loc[x, "failed_login_count"] = int(df.loc[x, "failed_login_count"]) + 1
                         df.to_csv('username_password.csv')
                         if df.loc[x, "failed_login_count"] == 3:
-                            my_log.log(datetime.utcnow(),f'{self.username} account_locked','INFO')
+                            Log_handler.log(datetime.utcnow(),f'{self.username} account_locked','INFO')
                             print('Your account has been locked')
                         break
-
-
-        my_log.log(datetime.utcnow,message,'INFO')
+        Log_handler.log(datetime.utcnow,message,'INFO')
         return self.token

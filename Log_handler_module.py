@@ -3,11 +3,17 @@ import logging
 from File_handler_module import File_Handler
 
 class Log_handler:
+    """
+    this clss is for registering logs
+    :params logger , f_handler
+    metods: log to add log
+    """
 
     log_file = 'log_file.log'
     def __init__(self):
         self.logger = None
         self.f_handler = None
+
 
     @staticmethod
     def log(time,message,event_type):
@@ -22,13 +28,5 @@ class Log_handler:
             logger.info(message)
         elif event_type =="ERROR" or event_type == 'EXCEPTION':
             logger.error(message)
-
-
-log_path = "system_log.log"
-event_type="login_failed"
-time = datetime.datetime.now()
-
-l = Log_handler()
-l.log(time,'Login failed','INFO')
 
 

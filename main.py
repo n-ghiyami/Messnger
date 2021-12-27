@@ -18,7 +18,7 @@ while True:
         login_obj = Login(username, password)
         login_obj.login_method()
         if login_obj.token == 'valid':
-            print("your logged in")
+            print("You're logged in!")
             while True:
                 requested_function = input("Enter 1 to switch to folders or 2 to create "
                                            "a new message and 3 to logout: ")
@@ -67,7 +67,7 @@ while True:
                             break
                         else:
                             print("invalid input")
-                elif user_input == 3:
+                elif requested_function == 3:
                     print("your logged out")
                     break
                 else:
