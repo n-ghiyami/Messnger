@@ -1,7 +1,7 @@
 import os
 from File_handler_module import File_Handler
 import pandas as pd
-
+from Log_handler_module import Log_handler
 class Messenger:
     """
     attribute:
@@ -23,8 +23,13 @@ class Messenger:
         this method loads homepage including inbox, sentbox and draft
         """
         if self.path != '':
+            directory_contents = []
             self.path = f"{os.getcwd()}/users/{self.path}"
-            directory_contents = os.listdir(self.path)
+            try:
+                directory_contents = os.listdir(self.path)
+            except Exception as ex:
+                print('Cannot load homepage')
+                Log_handler.log('Cannot load homepage','EXCEPTION')
             return (directory_contents)
 
     def load_all_messages_from_directory(self,directory_name):
@@ -60,15 +65,20 @@ class Messenger:
         :return:
         """
         path = f"{self.path}/{directory_name}"
-        df = pd.read_csv(f"{path}/index_file.csv")
-        message_path = f"{path}/{df.loc[message_number , 'unique_id']}.csv"
-        message_df = pd.read_csv(message_path)
-        message = Message.add_message(message_df.loc[0,'text'],
-            message_df.loc[0,'receiver_address'],message_df.loc[0,'sender_address'],
-            message_df.loc[0,'title'],message_df.loc[0,'time'])
-        if directory_name=='Inbox':
-            df.loc[message_number-1 , 'read_status'] = 'read'
-            df.to_csv(f"{path}/index_file.csv")
+        try:
+            df = pd.read_csv(f"{path}/index_file.csv")
+            message_path = f"{path}/{df.loc[message_number, 'unique_id']}.csv"
+            message_df = pd.read_csv(message_path)
+            message = Message.add_message(message_df.loc[0, 'text'],
+                                          message_df.loc[0, 'receiver_address'], message_df.loc[0, 'sender_address'],
+                                          message_df.loc[0, 'title'], message_df.loc[0, 'time'])
+            if directory_name == 'Inbox':
+                df.loc[message_number - 1, 'read_status'] = 'read'
+                df.to_csv(f"{path}/index_file.csv")
+        except Exception as ex:
+            print(f"{ex.__str__()}")
+            Log_handler.log('File_exception', 'EXCEPTION')
+            return
         return str(message)
 
     def delete_message(self,directory_name, message_number):
@@ -88,24 +98,36 @@ class Messenger:
         if self.path != '':
             path = f"{self.path}/Sentbox"
             unique_id = f"{temp_message.title}_{temp_message.time}"
-            fl = File_Handler(f"{path}/{unique_id}.csv")
-            fl.write(temp_message.__dict__())
-            fl = File_Handler(f"{path}/index_file.csv")
-            new_record = {'sender':temp_message.sender_address,'receiver':temp_message.receiver_address,
-                          'unique_id':unique_id }
-            fl.write(new_record)
+            try:
+                fl = File_Handler(f"{path}/{unique_id}.csv")
+                fl.write(temp_message.__dict__())
+                fl = File_Handler(f"{path}/index_file.csv")
+                new_record = {'sender': temp_message.sender_address, 'receiver': temp_message.receiver_address,
+                              'unique_id': unique_id}
+                fl.write(new_record)
+            except Exception as ex:
+                print(f"{ex.__str__()}")
+                Log_handler.log('File_exception','EXCEPTION')
+                return
 #           update receiver inbox
             path = f"{os.getcwd()}/users/{temp_message.receiver_address}/Inbox"
-            fl = File_Handler(f"{path}/{unique_id}_{temp_message.sender_address}.csv")
-            # may some users send message simultaneously
-            fl.write(temp_message.__dict__())
-            fl = File_Handler(f"{path}/index_file.csv")
-            new_record = {'sender': temp_message.sender_address, 'receiver': temp_message.receiver_address,
-                          'unique_id': unique_id, 'read_status':'unread'}
-            fl.write(new_record)
-
-
-
+            try:
+                fl = File_Handler(f"{path}/{unique_id}_{temp_message.sender_address}.csv")
+                # may some users send message simultaneously
+                fl.write(temp_message.__dict__())
+            except Exception as ex:
+                print(f"{ex.__str__()}")
+                Log_handler.log('File_exception','EXCEPTION')
+                return
+            try:
+                fl = File_Handler(f"{path}/index_file.csv")
+                new_record = {'sender': temp_message.sender_address, 'receiver': temp_message.receiver_address,
+                              'unique_id': unique_id, 'read_status': 'unread'}
+                fl.write(new_record)
+            except Exception as ex:
+                print(f"{ex.__str__()}")
+                Log_handler.log('File_exception','EXCEPTION')
+                return
 
 class Message:
     """

@@ -28,7 +28,13 @@ while True:
                     list_string = [f"{i} to {item}" for i, item in enumerate(directory_list, start=1)]
                     directory_number = int(input(f"Enter {','.join(list_string)}"))
                     directory_name = directory_list[directory_number - 1]
-                    print(messenger_obj.load_all_messages_from_directory(directory_name))
+                    try:
+                        if os.stat('index_file.csv').st_size == 0:
+                            print("Folder is Empty")
+                        else:
+                            print(messenger_obj.load_all_messages_from_directory(directory_name))
+                    except OSError:
+                        print("No File to read!")
                     while True:
                         requested_function = input("Enter 1 to delete message and 2 to show message"
                                                    " and 3 to quit folder: ")

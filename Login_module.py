@@ -69,23 +69,33 @@ class Login:
         if self.token == 'valid':
             path = f"{self.username}"
             message = 'login_successful'
-            df = pd.read_csv(f"username_password.csv")
-            for x in df.index:
-                if df.loc[x,'username'] == self.username:
-                    df.loc[x , 'failed_login_count'] = 0
-                    df.to_csv("username_password.csv",index=None,index_label=None)
-                    break
+            try:
+                df = pd.read_csv(f"username_password.csv")
+                for x in df.index:
+                    if df.loc[x, 'username'] == self.username:
+                        df.loc[x, 'failed_login_count'] = 0
+                        df.to_csv("username_password.csv", index=None, index_label=None)
+                        break
+            except Exception as ex:
+                print(f"{ex.__str__()}")
+                Log_handler.log('File_exception','EXCEPTION')
+
         else:
             print("Incorrect username or password!")
-            df = pd.read_csv('username_password.csv')
-            if len(df)>0:
-                for x in df.index:
-                    if df.loc[x,"username"] == self.username:
-                        df.loc[x, "failed_login_count"] = int(df.loc[x, "failed_login_count"]) + 1
-                        df.to_csv('username_password.csv')
-                        if df.loc[x, "failed_login_count"] == 3:
-                            Log_handler.log(datetime.utcnow(),f'{self.username} account_locked','INFO')
-                            print('Your account has been locked')
-                        break
+            try:
+                df = pd.read_csv('username_password.csv')
+                if len(df) > 0:
+                    for x in df.index:
+                        if df.loc[x, "username"] == self.username:
+                            df.loc[x, "failed_login_count"] = int(df.loc[x, "failed_login_count"]) + 1
+                            df.to_csv('username_password.csv')
+                            if df.loc[x, "failed_login_count"] == 3:
+                                Log_handler.log(datetime.utcnow(), f'{self.username} account_locked', 'INFO')
+                                print('Your account has been locked')
+                            break
+            except Exception as ex:
+                print(f"{ex.__str__()}")
+                Log_handler.log('File_exception','EXCEPTION')
+                return
         Log_handler.log(datetime.utcnow,message,'INFO')
         return self.token
