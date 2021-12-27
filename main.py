@@ -29,13 +29,28 @@ while True:
                     directory_number = int(input(f"Enter {','.join(list_string)}"))
                     directory_name = directory_list[directory_number - 1]
                     print(messenger_obj.load_all_messages_from_directory(directory_name))
-                    message_number = int(input("Enter message number showed in left side of record to show: "))
-                    print(messenger_obj.show_message(directory_name,message_number))
+                    while True:
+                        requested_function = input("Enter 1 to delete message and 2 to show message"
+                                                   " and 3 to quit folder: ")
+                        if requested_function == '1':
+                            messenger_obj.load_all_messages_from_directory(directory_name)
+                            message_number = int(input("Enter message number showed in left side of"
+                                                       " record to delete: "))
+                            messenger_obj.delete_message(directory_name,message_number)
+                        elif requested_function == '2':
+                            message_number = int(input("Enter message number showed in left side of"
+                                                       " record to show: "))
+                            print(messenger_obj.show_message(directory_name, message_number))
+                        elif requested_function =='3':
+                            break
+                        else:
+                            print("Invalid Input")
+
                 elif requested_function == '2':
                     receiver_address = input("Enter receiver address: ")
                     title = input("Enter title of message: ")
                     text = input("Enter text of message: ")
-                    time =  f"{datetime.datetime.utcnow().strftime( '%Y-%M-%d_%H-%M-%S')}"
+                    time =  f"{datetime.datetime.utcnow().strftime( '%Y-%B-%d_%H-%M-%S')}"
                     new_message = messenger_obj.create_new_message(input_text=text,
                                                                    receiver_address=receiver_address,
                                                                    sender_address=username,

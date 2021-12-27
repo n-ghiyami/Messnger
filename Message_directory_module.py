@@ -71,42 +71,38 @@ class Messenger:
             df.to_csv(f"{path}/index_file.csv")
         return str(message)
 
-    def delete_message(self,path, message_number):
+    def delete_message(self,directory_name, message_number):
         """
         this method deletes a specific message from path folder
-        :param path:
+        :param path, directory_name:
         :param message_number:
         :return:
         """
-        df = pd.read_csv(f"{path}/index_file.csv")
-        os.remove(f"{path}/{df.loc[message_number-1 , 'unique_id']}")
-        df.drop(labels=message_number-1,axis=0)
+        df = pd.read_csv(f"{self.path}/{directory_name}/index_file.csv")
+        os.remove(f"{self.path}/{directory_name}/{df.loc[message_number , 'unique_id']}.csv")
+        df.drop(labels=message_number,axis=0)
+        df.to_csv(f"{self.path}/{directory_name}/index_file.csv")
         print("Message has just been deleted!")
 
     def send_message(self,temp_message):
         if self.path != '':
-            path = f"{os.getcwd()}/Sentbox"
+            path = f"{self.path}/Sentbox"
             unique_id = f"{temp_message.title}_{temp_message.time}"
             fl = File_Handler(f"{path}/{unique_id}.csv")
-            fl.write(dict(temp_message))
+            fl.write(temp_message.__dict__())
             fl = File_Handler(f"{path}/index_file.csv")
-            content = fl.read()
             new_record = {'sender':temp_message.sender_address,'receiver':temp_message.receiver_address,
                           'unique_id':unique_id }
-            content.append(new_record)
-            fl.write(content)
+            fl.write(new_record)
 #           update receiver inbox
-            os.chdir("..") #change directory to all users directory
-            path = f"{os.getcwd()}/{temp_message.receiver_address}/Inbox"
+            path = f"{os.getcwd()}/users/{temp_message.receiver_address}/Inbox"
             fl = File_Handler(f"{path}/{unique_id}_{temp_message.sender_address}.csv")
             # may some users send message simultaneously
-            fl.write(dict(temp_message))
+            fl.write(temp_message.__dict__())
             fl = File_Handler(f"{path}/index_file.csv")
-            content = fl.read()
             new_record = {'sender': temp_message.sender_address, 'receiver': temp_message.receiver_address,
                           'unique_id': unique_id, 'read_status':'unread'}
-            content.append(new_record)
-            fl.write(content)
+            fl.write(new_record)
 
 
 
