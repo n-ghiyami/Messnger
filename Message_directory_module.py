@@ -47,7 +47,11 @@ class Messenger:
         return new_message
 
     def save_in_draft(self,temp_message):
-        print("this method saves a specific message in draft")
+        """
+        this method saves a specific message in draft
+        :param temp_message:
+        :return:
+        """
         if self.path != '':
             path = f"{self.path}/Draft"
             fl = File_Handler(f"{path}/{temp_message.title}_{temp_message.time}.csv")
