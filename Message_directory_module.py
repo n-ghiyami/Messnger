@@ -91,7 +91,7 @@ class Messenger:
         df = pd.read_csv(f"{self.path}/{directory_name}/index_file.csv")
         os.remove(f"{self.path}/{directory_name}/{df.loc[message_number , 'unique_id']}.csv")
         df.drop(labels=message_number,axis=0)
-        df.to_csv(f"{self.path}/{directory_name}/index_file.csv")
+        df.to_csv(f"{self.path}/{directory_name}/index_file.csv",index=False, index_label=None)
         print("Message has just been deleted!")
 
     def send_message(self,temp_message):
@@ -112,7 +112,7 @@ class Messenger:
 #           update receiver inbox
             path = f"{os.getcwd()}/users/{temp_message.receiver_address}/Inbox"
             try:
-                fl = File_Handler(f"{path}/{unique_id}_{temp_message.sender_address}.csv")
+                fl = File_Handler(f"{path}/{unique_id}.csv")
                 # may some users send message simultaneously
                 fl.write(temp_message.__dict__())
             except Exception as ex:

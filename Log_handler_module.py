@@ -16,7 +16,7 @@ class Log_handler:
 
 
     @staticmethod
-    def log(time,message,event_type):
+    def log(message,event_type):
         logger = logging.getLogger(__name__)
         f_handler = logging.FileHandler('log_file.log')
         formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')

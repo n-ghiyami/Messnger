@@ -3,8 +3,8 @@ import os
 from sign_up import Sign_up
 from Login_module import Login
 import Message_directory_module
-from File_handler_module import File_Handler
 
+is_empty=False
 while True:
     user_input = input("Enter 1 to sign up and 2 to login or any other key to exit : ")
     if user_input == '1':
@@ -29,28 +29,31 @@ while True:
                     directory_number = int(input(f"Enter {','.join(list_string)}"))
                     directory_name = directory_list[directory_number - 1]
                     try:
-                        if os.stat('index_file.csv').st_size == 0:
+                        if os.stat(f'{messenger_obj.path}/{directory_name}/index_file.csv').st_size == 0:
                             print("Folder is Empty")
                         else:
                             print(messenger_obj.load_all_messages_from_directory(directory_name))
+                            is_empty = False
                     except OSError:
                         print("No File to read!")
-                    while True:
-                        requested_function = input("Enter 1 to delete message and 2 to show message"
-                                                   " and 3 to quit folder: ")
-                        if requested_function == '1':
-                            messenger_obj.load_all_messages_from_directory(directory_name)
-                            message_number = int(input("Enter message number showed in left side of"
-                                                       " record to delete: "))
-                            messenger_obj.delete_message(directory_name,message_number)
-                        elif requested_function == '2':
-                            message_number = int(input("Enter message number showed in left side of"
-                                                       " record to show: "))
-                            print(messenger_obj.show_message(directory_name, message_number))
-                        elif requested_function =='3':
-                            break
-                        else:
-                            print("Invalid Input")
+                        is_empty = True
+                    if not is_empty:
+                        while True:
+                            requested_function = input("Enter 1 to delete message and 2 to show message"
+                                                       " and 3 to quit folder: ")
+                            if requested_function == '1':
+                                messenger_obj.load_all_messages_from_directory(directory_name)
+                                message_number = int(input("Enter message number showed in left side of"
+                                                           " record to delete: "))
+                                messenger_obj.delete_message(directory_name, message_number)
+                            elif requested_function == '2':
+                                message_number = int(input("Enter message number showed in left side of"
+                                                           " record to show: "))
+                                print(messenger_obj.show_message(directory_name, message_number))
+                            elif requested_function == '3':
+                                break
+                            else:
+                                print("Invalid Input")
 
                 elif requested_function == '2':
                     receiver_address = input("Enter receiver address: ")
@@ -68,12 +71,13 @@ while True:
                             break
                         elif requested_function == '2':
                             messenger_obj.send_message(new_message)
+                            print("mesage has been sent!")
                             break
                         elif requested_function == '3':
                             break
                         else:
                             print("invalid input")
-                elif requested_function == 3:
+                elif requested_function == '3':
                     print("your logged out")
                     break
                 else:

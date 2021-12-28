@@ -97,7 +97,7 @@ class Sign_up:
                 print(ex.with_traceback())
                 Log_handler.log(f'{ex.__str__()}','EXCEPTION')
             os.mkdir(f'users/{self.username}')
-            os.mkdir(f'users/{self.username}/Intbox')
+            os.mkdir(f'users/{self.username}/Inbox')
             os.mkdir(f'users/{self.username}/Sentbox')
             os.mkdir(f'users/{self.username}/Draft')
             path = (f'users/{self.username}/Intbox/index_file.csv')

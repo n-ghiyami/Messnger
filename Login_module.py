@@ -97,5 +97,5 @@ class Login:
                 print(f"{ex.__str__()}")
                 Log_handler.log('File_exception','EXCEPTION')
                 return
-        Log_handler.log(datetime.utcnow,message,'INFO')
+        Log_handler.log(message,'INFO')
         return self.token
