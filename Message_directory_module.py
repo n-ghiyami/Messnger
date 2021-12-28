@@ -73,8 +73,8 @@ class Messenger:
                                           message_df.loc[0, 'receiver_address'], message_df.loc[0, 'sender_address'],
                                           message_df.loc[0, 'title'], message_df.loc[0, 'time'])
             if directory_name == 'Inbox':
-                df.loc[message_number - 1, 'read_status'] = 'read'
-                df.to_csv(f"{path}/index_file.csv")
+                df.loc[message_number, 'read_status'] = 'read'
+                df.to_csv(f"{path}/index_file.csv",index=False, index_label=None)
         except Exception as ex:
             print(f"{ex.__str__()}")
             Log_handler.log('File_exception', 'EXCEPTION')
