@@ -100,12 +100,12 @@ class Sign_up:
             os.mkdir(f'users/{self.username}/Inbox')
             os.mkdir(f'users/{self.username}/Sentbox')
             os.mkdir(f'users/{self.username}/Draft')
-            path = (f'users/{self.username}/Intbox/index_file.csv')
+            path = (f'users/{self.username}/Inbox/index_file.csv')
             try:
                 with open(path,'w')as csvfile:
                     pass
             except Exception as ex:
-                print(ex.with_traceback())
+                print("Exception")
                 Log_handler.log(f'{ex.__str__()}', 'EXCEPTION')
             path = (f'users/{self.username}/Sentbox/index_file.csv')
             try:

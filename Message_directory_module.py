@@ -6,7 +6,7 @@ class Messenger:
     """
     attribute:
     path : path of directory
-    homepage_list : list of folders in homepage incuding inbox/sentbox/draft
+
 
     methods:
     load_homepage
