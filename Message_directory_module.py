@@ -90,7 +90,7 @@ class Messenger:
         """
         df = pd.read_csv(f"{self.path}/{directory_name}/index_file.csv")
         os.remove(f"{self.path}/{directory_name}/{df.loc[message_number , 'unique_id']}.csv")
-        df.drop(labels=message_number,axis=0)
+        df = df.drop(df.index[message_number])
         df.to_csv(f"{self.path}/{directory_name}/index_file.csv",index=False, index_label=None)
         print("Message has just been deleted!")
 

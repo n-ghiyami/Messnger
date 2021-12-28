@@ -60,3 +60,12 @@
 2021-12-28 20:46:18,194 - Log_handler_module - INFO - login_successful
 2021-12-28 20:46:18,194 - Log_handler_module - INFO - login_successful
 2021-12-28 20:46:18,194 - Log_handler_module - INFO - login_successful
+2021-12-28 20:53:10,041 - Log_handler_module - INFO - login_successful
+2021-12-28 20:58:05,381 - Log_handler_module - INFO - login_successful
+2021-12-28 21:04:56,014 - Log_handler_module - INFO - login_failed
+2021-12-28 21:05:13,939 - Log_handler_module - INFO - login_successful
+2021-12-28 21:05:13,939 - Log_handler_module - INFO - login_successful
+2021-12-28 21:10:29,965 - Log_handler_module - INFO - login_successful
+2021-12-28 21:11:35,436 - Log_handler_module - INFO - login_failed
+2021-12-28 21:11:44,781 - Log_handler_module - INFO - login_successful
+2021-12-28 21:11:44,781 - Log_handler_module - INFO - login_successful
