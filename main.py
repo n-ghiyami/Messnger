@@ -45,7 +45,10 @@ while True:
                                 messenger_obj.load_all_messages_from_directory(directory_name)
                                 message_number = int(input("Enter message number showed in left side of"
                                                            " record to delete: "))
-                                messenger_obj.delete_message(directory_name, message_number)
+                                try:
+                                    messenger_obj.delete_message(directory_name, message_number)
+                                except FileNotFoundError:
+                                    print(f"File not found! Enter a valid number!")
                             elif requested_function == '2':
                                 message_number = int(input("Enter message number showed in left side of"
                                                            " record to show: "))
